@@ -1,0 +1,70 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: CreditDelegationVaultFactory
+    network: mumbai
+    source:
+      address: "0xbc4faa49816734e11c6E6147ae0d6001c87054AA"
+      abi: CreditDelegationVaultFactory
+      startBlock: 36597290
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Vault
+        - Owner
+        - Manager
+        - DebtToken
+      abis:
+        - name: CreditDelegationVaultFactory
+          file: ./abis/CreditDelegationVaultFactory.json
+        - name: CreditDelegationVault
+          file: ./abis/CreditDelegationVault.json
+        - name: AaveDebtToken
+          file: ./abis/AaveDebtToken.json
+      eventHandlers:
+        - event: VaultCreated(indexed address,indexed address)
+          handler: handleVaultCreated
+      file: ./src/creditDelegationVaultFactory.ts
+templates:
+  - name: CreditDelegationVault
+    kind: ethereum/contract
+    network: mumbai
+    source:
+      abi: CreditDelegationVault
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Vault
+      abis:
+        - name: CreditDelegationVault
+          file: ./abis/CreditDelegationVault.json
+      eventHandlers:
+        - event: Borrow(indexed address,indexed address,uint256)
+          handler: handleBorrow
+      file: ./src/creditDelegationVault.ts
+  - name: AaveDebtToken
+    kind: ethereum
+    network: mumbai
+    source:
+      abi: AaveDebtToken
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Vault
+      abis:
+        - name: AaveDebtToken
+          file: ./abis/AaveDebtToken.json
+        - name: CreditDelegationVault
+          file: ./abis/CreditDelegationVault.json
+      eventHandlers:
+        - event: BorrowAllowanceDelegated(indexed address,indexed address,indexed address,uint256)
+          handler: handleBorrowAllowance
+      file: ./src/aaveDebtToken.ts

@@ -1,0 +1,8 @@
+{
+  "mumbai": {
+    "CreditDelegationVaultFactory": {
+      "address": "0xbc4faa49816734e11c6E6147ae0d6001c87054AA",
+      "startBlock": 36597290
+    }
+  }
+}

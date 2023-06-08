@@ -1,0 +1,27 @@
+type Vault @entity {
+  id: ID!
+  vault: Bytes! # address
+  owner: Owner!
+  createdAt: BigInt! # timestamp
+  debtToken: Bytes!
+  manager: Manager!
+  atomicaPool: Bytes!
+  asset: Bytes!
+  allowance: BigInt
+  loanAmount: BigInt
+}
+
+type Owner @entity {
+  id: ID!
+  vaults: [Vault!]! @derivedFrom(field: "owner")
+}
+
+type Manager @entity {
+  id: ID!
+  managedVaults: [Vault!]! @derivedFrom(field: "manager")
+}
+
+type DebtToken @entity {
+  # contract address
+  id: ID!
+}
